@@ -1,0 +1,188 @@
+/* ---------- Basic page ---------- */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.7;
+  color: #202124;
+  background: #f8f9fa;
+}
+
+header,
+main,
+footer {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ---------- Header ---------- */
+header {
+  padding-top: 40px;
+  border-bottom: 4px solid #1a73e8;
+  padding-bottom: 16px;
+}
+
+h1 {
+  font-size: 2rem;
+  line-height: 1.3;
+  margin: 0;
+}
+
+.meta {
+  color: #5f6368;
+  font-size: 0.9rem;
+}
+
+/* ---------- Text ---------- */
+.lead {
+  font-size: 1.15rem;
+  font-style: italic;
+  color: #3c4043;
+  margin-top: 24px;
+}
+
+h2 {
+  color: #1a73e8;
+  margin-top: 40px;
+}
+
+h3 {
+  margin-top: 24px;
+  margin-bottom: 4px;
+}
+
+code {
+  background: #e8eaed;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+a {
+  color: #1a73e8;
+}
+
+/* ---------- Table ---------- */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  background: white;
+  font-size: 0.95rem;
+}
+
+th,
+td {
+  border: 1px solid #dadce0;
+  padding: 10px;
+  text-align: left;
+}
+
+th {
+  background: #1a73e8;
+  color: white;
+}
+
+/* ---------- Diagram (pure CSS) ---------- */
+.diagram {
+  background: white;
+  border: 1px solid #dadce0;
+  border-radius: 12px;
+  padding: 24px 16px;
+  margin: 24px 0;
+}
+
+.flow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.box {
+  width: 230px;
+  padding: 10px;
+  border: 2px solid #9aa0a6;
+  border-radius: 10px;
+  text-align: center;
+  font-weight: bold;
+  background: white;
+}
+
+.box span {
+  display: block;
+  font-weight: normal;
+  font-size: 0.8rem;
+  color: #5f6368;
+}
+
+.box.main {
+  border-color: #1a73e8;
+  background: #e8f0fe;
+}
+
+.box.green {
+  border-color: #188038;
+  background: #e6f4ea;
+}
+
+.box.dashed {
+  border-style: dashed;
+}
+
+.arrow {
+  color: #5f6368;
+  font-size: 0.85rem;
+  margin: 6px 0;
+}
+
+.side-arrow {
+  font-size: 1.5rem;
+  color: #5f6368;
+}
+
+figcaption {
+  text-align: center;
+  color: #5f6368;
+  font-size: 0.85rem;
+  margin-top: 16px;
+}
+
+/* ---------- Footer ---------- */
+footer {
+  margin-top: 48px;
+  padding-top: 16px;
+  padding-bottom: 40px;
+  border-top: 1px solid #dadce0;
+  color: #5f6368;
+  font-size: 0.85rem;
+}
+
+/* ---------- Mobile ---------- */
+@media (max-width: 600px) {
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  .row {
+    flex-direction: column;
+  }
+
+  .side-arrow {
+    transform: rotate(90deg);
+  }
+
+  .box {
+    width: 100%;
+    max-width: 280px;
+  }
+}

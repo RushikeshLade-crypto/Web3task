@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How Account Abstraction Makes Web3 Easier and Safer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1>How Account Abstraction Makes Web3 Easier and Safer</h1>
+    <p class="meta">By Your Name · October 2026 · 7 min read</p>
+  </header>
+
+  <main>
+    <p class="lead">Account abstraction turns your crypto wallet from a single fragile key into a programmable account, and ERC-4337 is the standard that made it work on Ethereum without changing the protocol.</p>
+
+    <h2>The problem: Web3 asks too much of new users</h2>
+    <p>Imagine asking a first-year student to try a dApp. Before they can do anything, they must install a wallet and write down 12 random words. Then they must buy ETH just to pay gas, and approve every single action in a pop-up.</p>
+    <p>If they lose those 12 words, their money is gone forever. If someone tricks them into revealing the words, their money is also gone forever. No password reset, no support desk.</p>
+    <p>This is not a design accident. It comes from how the most common Ethereum account, the EOA, is built. Account abstraction is the idea of fixing that at the account level. ERC-4337 is the standard that brought it to Ethereum.</p>
+
+    <h2>EOAs vs smart wallets</h2>
+    <p>Ethereum has two kinds of accounts. An <b>Externally Owned Account (EOA)</b> is what MetaMask gives you by default. It is controlled by exactly one private key, and its rules are hard-coded into Ethereum itself. A <b>contract account</b> is controlled by code instead of a key.</p>
+    <p>The catch is that in the original design, only an EOA can start a transaction. So every user needed an EOA, with all its limits.</p>
+
+    <table>
+      <tr><th></th><th>EOA</th><th>Smart wallet</th></tr>
+      <tr><td>Controlled by</td><td>One private key</td><td>Code you choose</td></tr>
+      <tr><td>Lose the key</td><td>Funds lost for good</td><td>Recovery rules can replace it</td></tr>
+      <tr><td>Signing</td><td>One fixed scheme (ECDSA)</td><td>Passkeys, multisig, anything coded</td></tr>
+      <tr><td>Paying gas</td><td>Must hold ETH</td><td>Someone else can pay</td></tr>
+      <tr><td>Actions</td><td>One per transaction</td><td>Many in one operation</td></tr>
+      <tr><td>Spending limits</td><td>None</td><td>Daily limits, allowlists</td></tr>
+    </table>
+
+    <p>A <b>smart wallet</b> moves the account's logic into a smart contract. Now <i>code</i> decides what counts as a valid transaction. That one change is what "account abstraction" means: we abstract away the idea that an account must be a single key.</p>
+
+    <h2>How ERC-4337 works</h2>
+    <p>Smart wallets like Gnosis Safe existed before 2023, but each team ran its own relayer to submit transactions. ERC-4337 standardised the whole pipeline using only smart contracts and off-chain services. It needed <b>no change to Ethereum's consensus rules</b>, so it could launch without a hard fork.</p>
+    <p>There are six moving parts:</p>
+    <ol>
+      <li><b>UserOperation</b>: instead of a normal transaction, your wallet app builds a UserOperation describing what you want to do, the gas limits, and your signature.</li>
+      <li><b>Bundler</b>: an off-chain node that collects UserOperations, checks them, packs many into one real transaction, and submits it.</li>
+      <li><b>EntryPoint</b>: one shared, audited contract per chain. It asks each smart account to validate its UserOperation, collects gas, then executes the call.</li>
+      <li><b>Smart account</b>: your wallet contract. Its <code>validateUserOp()</code> function checks the signature and rules.</li>
+      <li><b>Paymaster</b> (optional): a contract that pays the gas for you, or lets you pay in a token like USDC.</li>
+      <li><b>Factory</b>: deploys your smart account the first time you use it. Your address is known in advance.</li>
+    </ol>
+
+    <!-- Diagram made with plain HTML + CSS -->
+    <figure class="diagram">
+      <div class="flow">
+        <div class="box">Your wallet app<span>builds and signs a UserOperation</span></div>
+        <div class="arrow">↓ sent to an alt mempool</div>
+        <div class="box">Bundler (off-chain)<span>packs many UserOps into one transaction</span></div>
+        <div class="arrow">↓ one real transaction</div>
+        <div class="row">
+          <div class="box main">EntryPoint contract<span>validates, charges gas, executes</span></div>
+          <div class="side-arrow">→</div>
+          <div class="box green">Paymaster (optional)<span>pays the gas for you</span></div>
+        </div>
+        <div class="arrow">↓ asks the account to validate</div>
+        <div class="row">
+          <div class="box">Smart account<span>validateUserOp() checks the rules</span></div>
+          <div class="side-arrow">←</div>
+          <div class="box dashed">Account factory<span>deploys account on first use</span></div>
+        </div>
+        <div class="arrow">↓ runs your call</div>
+        <div class="box">Target contract<span>e.g. a donation or NFT badge claim</span></div>
+      </div>
+      <figcaption>Figure: How one action flows through ERC-4337.</figcaption>
+    </figure>
+
+    <h2>Four ways it makes Web3 easier and safer</h2>
+    <h3>1. Gasless transactions</h3>
+    <p>A paymaster can cover gas fees. Picture a GDGoC event where attendees claim an NFT badge. With an EOA, each student first needs ETH. With a smart wallet and a paymaster, the club sponsors the gas and students just tap "Claim".</p>
+    <h3>2. Social recovery</h3>
+    <p>You choose a few <b>guardians</b>, such as two friends and your second device. If you lose your phone, any two of three guardians can approve a new key. Your address and funds stay the same.</p>
+    <h3>3. Session keys</h3>
+    <p>A session key is a temporary key with limited rights. A blockchain game could get a key valid for one hour, only for the game contract, spending at most 0.01 ETH. No pop-up for every move, and if the key leaks, the damage is capped.</p>
+    <h3>4. Batching</h3>
+    <p>Many DeFi actions need two steps: approve a token, then swap it. A smart account can bundle both into one atomic operation. Either both happen or neither does.</p>
+    <p>Smart wallets can also add <b>daily spending limits</b>, <b>multi-signature approval</b> for large transfers, and <b>passkey signing</b> with your fingerprint or Face ID.</p>
+
+    <h2>The limitations</h2>
+    <ul>
+      <li><b>Higher gas per action</b> than a plain EOA transfer, plus a one-time cost to deploy the account.</li>
+      <li><b>Dependence on infrastructure.</b> If a paymaster runs out of funds or goes offline, the "gasless" experience breaks.</li>
+      <li><b>Smart contract risk.</b> A bug in the wallet code can lock or drain funds, so audits matter.</li>
+      <li><b>Compatibility gaps.</b> Some older dApps assume every signer is an EOA and don't support ERC-1271 signature checks.</li>
+      <li><b>Migration.</b> Existing EOA users must move to a new address, which is what EIP-7702 tries to solve.</li>
+    </ul>
+
+    <h2>Real-world examples</h2>
+    <p><b>Safe</b> (formerly Gnosis Safe) is the best-known multisig smart account. DAOs use it so that, for example, 3 of 5 owners must sign before money moves. Safe supports ERC-4337 through its Safe4337Module.</p>
+    <p><b>Argent</b> pioneered social recovery with no seed phrase. Guardians can be friends, a hardware wallet, or Argent's own service. A majority of guardians confirms a recovery, and a 36-hour delay lets you cancel a hijack attempt. (The brand has since moved to a new name, Ready.)</p>
+    <p><b>Coinbase Smart Wallet</b> is an ERC-4337 wallet that uses passkeys instead of a seed phrase. In July 2025 Coinbase launched its Base app, where new users automatically get a smart wallet called a Base Account.</p>
+
+    <h3>What comes next: EIP-7702</h3>
+    <p><b>EIP-7702</b> went live with Ethereum's Pectra upgrade on 7 May 2025. It lets an existing EOA use smart-account code while keeping its address. It works together with ERC-4337: an upgraded EOA can still use bundlers and paymasters.</p>
+
+    <h2>Conclusion</h2>
+    <p>For years, Web3 asked users to behave like security experts: guard a seed phrase, hold ETH for gas, and approve every step by hand. Account abstraction flips that. Wallets can now recover lost keys, sponsor gas, limit damage, and bundle steps, just like the apps people already trust.</p>
+    <p>It still costs some extra gas and depends on new infrastructure. But if Web3 is going to reach the next billion users, including the students in our own college, the wallet has to stop being the hardest part.</p>
+
+    <h2>Sources</h2>
+    <ol class="sources">
+      <li><a href="https://eips.ethereum.org/EIPS/eip-4337">ERC-4337 specification</a></li>
+      <li><a href="https://eips.ethereum.org/EIPS/eip-7702">EIP-7702 specification</a></li>
+      <li><a href="https://docs.pimlico.io/guides/eip7702/erc4337-vs-eip7702">ERC-4337 vs EIP-7702, Pimlico docs</a></li>
+      <li><a href="https://docs.safe.global/advanced/erc-4337/4337-safe">Safe and ERC-4337, Safe docs</a></li>
+      <li><a href="https://techcrunch.com/2020/05/18/buzzy-ethereum-wallet-app-argent-comes-out-of-stealth">Argent comes out of stealth, TechCrunch (2020)</a></li>
+      <li><a href="https://www.theblock.co/post/362713/coinbase-unveils-base-app-rebrands-wallet-as-all-in-one-social-and-trading-platform">Coinbase unveils Base App, The Block (2025)</a></li>
+    </ol>
+  </main>
+
+  <footer>
+    <p>Written for the GDGoC Web3 pre-interview task.</p>
+  </footer>
+
+</body>
+</html>
